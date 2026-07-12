@@ -127,6 +127,24 @@ class ApiService {
       throw Exception('Gagal mengajukan permohonan surat.');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getInformasi() async {
+    final response = await http.get(Uri.parse('$baseUrl/info'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data['data']);
+    }
+    throw Exception('Gagal memuat informasi.');
+  }
+
+  Future<List<Map<String, dynamic>>> getPncNews() async {
+    final response = await http.get(Uri.parse('$baseUrl/news'));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return List<Map<String, dynamic>>.from(data['data']);
+    }
+    throw Exception('Gagal memuat berita PNC.');
+  }
 }
 
 
@@ -202,4 +220,12 @@ final mbkmProvider = FutureProvider.autoDispose<Map<String, dynamic>>((ref) asyn
   final user = ref.watch(authProvider);
   if (user == null) return {};
   return ref.read(apiServiceProvider).getMbkm(user['id']);
+});
+
+final infoProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  return ref.read(apiServiceProvider).getInformasi();
+});
+
+final newsProvider = FutureProvider.autoDispose<List<Map<String, dynamic>>>((ref) async {
+  return ref.read(apiServiceProvider).getPncNews();
 });

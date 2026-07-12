@@ -18,7 +18,7 @@ class _HalamanJadwalState extends ConsumerState<HalamanJadwal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: WarnaAplikasi.latarBelakang,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -161,30 +161,71 @@ class _HalamanJadwalState extends ConsumerState<HalamanJadwal> {
 
   
   Widget _bangunTodayView() {
-    return Column(
-      children: [
-        _bangunTodayCard(
-          title: 'Praktikum Basis Data',
-          lecturer: 'Annas Setiawan Prabowo, S.Kom,M.Eng',
-          room: 'GKB 3.1',
-          time: '08:00 - 10:00',
-          isOngoing: true,
-        ),
-        _bangunTodayCard(
-          title: 'Praktikum RPL',
-          lecturer: 'Cahya Vikasari, S.T., M.Eng.',
-          room: 'GTIL 4.3',
-          time: '10:30 - 12:30',
-          isOngoing: false,
-        ),
-        _bangunTodayCard(
-          title: 'Matematika Diskrit',
-          lecturer: 'Rostika Listyaningrum, S.Si., M.Si.',
-          room: 'GKB 2.5',
-          time: '14:00 - 16:00',
-          isOngoing: false,
-        ),
-      ],
+    return ref.watch(matkulProvider).when(
+      loading: () => const Center(child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: CircularProgressIndicator(color: WarnaAplikasi.utama),
+      )),
+      error: (e, _) => Center(child: Text('Gagal memuat jadwal: $e', style: const TextStyle(fontFamily: 'Inter', color: Colors.red))),
+      data: (courses) {
+        final today = _hariIniIndonesian();
+        final todayCourses = courses.where((m) {
+          final j = m['jadwal']?.toString() ?? '';
+          return j.toLowerCase().startsWith(today.toLowerCase());
+        }).toList();
+
+        if (todayCourses.isEmpty) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: Column(
+                children: [
+                  Icon(Icons.event_available_outlined, size: 48, color: WarnaAplikasi.teksSekunder.withValues(alpha: 0.4)),
+                  const Gap(12),
+                  Text('Tidak ada kuliah $today', style: const TextStyle(fontSize: 14, color: WarnaAplikasi.teksSekunder, fontFamily: 'Inter')),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final now = TimeOfDay.now();
+        return Column(
+          children: todayCourses.map((m) {
+            final j = m['jadwal']?.toString() ?? '';
+            final parts = j.split(',');
+            final timeStr = parts.length > 1 ? parts[1].replaceAll('WIB', '').trim() : '';
+            final room = m['ruang']?.toString() ?? 'Online';
+
+            bool isOngoing = false;
+            if (timeStr.contains('-')) {
+              final timeParts = timeStr.split('-');
+              if (timeParts.length == 2) {
+                final startParts = timeParts[0].trim().split(':');
+                final endParts = timeParts[1].trim().split(':');
+                if (startParts.length >= 2 && endParts.length >= 2) {
+                  final startH = int.tryParse(startParts[0]) ?? 0;
+                  final startM = int.tryParse(startParts[1]) ?? 0;
+                  final endH = int.tryParse(endParts[0]) ?? 0;
+                  final endM = int.tryParse(endParts[1]) ?? 0;
+                  final nowMins = now.hour * 60 + now.minute;
+                  final startMins = startH * 60 + startM;
+                  final endMins = endH * 60 + endM;
+                  isOngoing = nowMins >= startMins && nowMins <= endMins;
+                }
+              }
+            }
+
+            return _bangunTodayCard(
+              title: m['nama'] ?? '',
+              lecturer: m['dosen'] ?? '',
+              room: room,
+              time: timeStr,
+              isOngoing: isOngoing,
+            );
+          }).toList(),
+        );
+      },
     );
   }
 
@@ -321,57 +362,42 @@ class _HalamanJadwalState extends ConsumerState<HalamanJadwal> {
 
   
   Widget _bangunWeekView() {
-    return Column(
-      children: [
-        _bangunWeekDayBlock(
-          dayName: 'Senin',
-          tags: const [
-            'Basis Data | 2 SKS',
-            'RPL | 3 SKS',
-            'Matematika Diskrit | 3 SKS',
-          ],
-        ),
-        _bangunWeekDayBlock(
-          dayName: 'Selasa',
-          tags: const [
-            'Kalkulus | 3 SKS',
-            'DIP | 3 SKS',
-            'Pemrograman Framework | 2 SKS',
-          ],
-        ),
-        _bangunWeekDayBlock(
-          dayName: 'Rabu',
-          tags: const [
-            'Big Data dan Data Mining | 2 SKS',
-            'DevOps | 3 SKS',
-            'Teknologi Microservices | 3 SKS',
-          ],
-        ),
-        _bangunWeekDayBlock(
-          dayName: 'Kamis',
-          tags: const [
-            'Big Data dan Data Mining | 2 SKS',
-            'DevOps | 3 SKS',
-            'Teknologi Microservices | 3 SKS',
-          ],
-        ),
-        _bangunWeekDayBlock(
-          dayName: 'Jumat',
-          tags: const [
-            'Big Data dan Data Mining | 2 SKS',
-            'DevOps | 3 SKS',
-            'Teknologi Microservices | 3 SKS',
-          ],
-        ),
-        _bangunWeekDayBlock(
-          dayName: 'Sabtu',
-          tags: const [
-            'Big Data dan Data Mining | 2 SKS',
-            'DevOps | 3 SKS',
-            'Teknologi Microservices | 3 SKS',
-          ],
-        ),
-      ],
+    return ref.watch(matkulProvider).when(
+      loading: () => const Center(child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: CircularProgressIndicator(color: WarnaAplikasi.utama),
+      )),
+      error: (e, _) => Center(child: Text('Gagal memuat jadwal: $e', style: const TextStyle(fontFamily: 'Inter', color: Colors.red))),
+      data: (courses) {
+        final urutan = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+        final Map<String, List<Map<String, dynamic>>> grouped = {};
+        for (final hari in urutan) {
+          final list = courses.where((m) {
+            final j = m['jadwal']?.toString() ?? '';
+            return j.toLowerCase().startsWith(hari.toLowerCase());
+          }).toList();
+          if (list.isNotEmpty) grouped[hari] = list;
+        }
+
+        if (grouped.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 32),
+              child: Text('Tidak ada jadwal mingguan.', style: TextStyle(fontSize: 14, color: WarnaAplikasi.teksSekunder, fontFamily: 'Inter')),
+            ),
+          );
+        }
+
+        return Column(
+          children: grouped.entries.map((entry) {
+            final tags = entry.value.map((m) {
+              final sks = m['sks']?.toString() ?? '2';
+              return '${m['nama']} | $sks SKS';
+            }).toList();
+            return _bangunWeekDayBlock(dayName: entry.key, tags: tags);
+          }).toList(),
+        );
+      },
     );
   }
 
@@ -568,5 +594,19 @@ class _HalamanJadwalState extends ConsumerState<HalamanJadwal> {
         ],
       ),
     );
+  }
+
+  String _hariIniIndonesian() {
+    final now = DateTime.now();
+    switch (now.weekday) {
+      case DateTime.monday: return 'Senin';
+      case DateTime.tuesday: return 'Selasa';
+      case DateTime.wednesday: return 'Rabu';
+      case DateTime.thursday: return 'Kamis';
+      case DateTime.friday: return 'Jumat';
+      case DateTime.saturday: return 'Sabtu';
+      case DateTime.sunday: return 'Minggu';
+      default: return '';
+    }
   }
 }

@@ -314,3 +314,32 @@ INSERT INTO `keuangan_riwayat` (`id`, `user_id`, `title`, `sub`, `date`, `amount
 (11, 4, 'Semester Ganjil 2023/2024', 'Pembayaran UKT - Teknik Informatika', 'Dibayar pada 15 Agustus 2023', 'Rp 5.250.000', 'spp'),
 (12, 4, 'Biaya Pendaftaran Mandiri', 'Registrasi Awal Mahasiswa Baru', 'Dibayar pada 1 Juli 2023', 'Rp 500.000', 'daftar');
 
+DROP TABLE IF EXISTS `informasi`;
+CREATE TABLE `informasi` (
+  `id` int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `judul` varchar(255) NOT NULL,
+  `konten` text NOT NULL,
+  `tanggal` varchar(50) NOT NULL,
+  `tipe` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `informasi` (`id`, `judul`, `konten`, `tanggal`, `tipe`) VALUES
+(1, 'Pengisian KRS Ganjil 2026/2027', 'Batas pengisian KRS diperpanjang sampai 15 Agustus 2026. Segera hubungi dosen wali.', '12 Jul 2026', 'krs'),
+(2, 'Pembayaran UKT Tahap I', 'Batas akhir pembayaran UKT untuk semester ganjil adalah 10 Agustus 2026.', '10 Jul 2026', 'peringatan'),
+(3, 'Sosialisasi Magang MBKM', 'Sosialisasi daring program magang dan studi independen hari Jumat jam 09.00 WIB.', '08 Jul 2026', 'info');
+
+DROP TABLE IF EXISTS `pnc_news`;
+CREATE TABLE `pnc_news` (
+  `id` int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  `judul` varchar(255) NOT NULL,
+  `sumber` varchar(100) NOT NULL,
+  `konten` text NOT NULL,
+  `gambar_url` varchar(255) NOT NULL,
+  `tanggal` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `pnc_news` (`id`, `judul`, `sumber`, `konten`, `gambar_url`, `tanggal`) VALUES
+(1, 'Kampus Kesehatan Punya Beban Administrasi Dua Kali Lipat, dan Banyak yang Belum Sadar Ini Bisa...', 'SEVIMA.COM - Setiap menjelang siklus akreditasi...', 'Setiap menjelang siklus akreditasi, kampus kesehatan sering kali menghadapi beban administrasi yang berlipat ganda karena standarisasi klinis dan akademik yang sangat ketat.', 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=400&q=80', '12 Jul 2026'),
+(2, 'Skema Digital Hari Ini Menjadi Kunci Utama Untuk Efisiensi Kampus...', 'SEVIMA - Kehadiran teknologi digital mempermudah...', 'Kehadiran teknologi digital mempermudah seluruh pengelolaan administrasi mahasiswa, pembayaran UKT, hingga presensi cepat di lingkungan kampus.', 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=400&q=80', '11 Jul 2026');
+
+

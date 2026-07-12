@@ -440,6 +440,32 @@ class ApiController extends Controller
         return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
     }
 
+    public function getInformasi()
+    {
+        $db = $this->getDb();
+        $info = $db->table('informasi')->get()->getResultArray();
+        foreach ($info as &$i) {
+            $i['id'] = (int) $i['id'];
+        }
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data' => $info
+        ]);
+    }
+
+    public function getPncNews()
+    {
+        $db = $this->getDb();
+        $news = $db->table('pnc_news')->get()->getResultArray();
+        foreach ($news as &$n) {
+            $n['id'] = (int) $n['id'];
+        }
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data' => $news
+        ]);
+    }
+
     public function options()
     {
         return $this->response->setStatusCode(200);
