@@ -195,7 +195,7 @@ DROP TABLE IF EXISTS `ta_catatan_dosen`;
 CREATE TABLE `ta_catatan_dosen` (
   `id` int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `user_id` int(11) UNSIGNED NOT NULL,
-  `tanggal` varchar(50) NOT NULL,
+  `tanggal` varchar(255) NOT NULL,
   `catatan` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -239,7 +239,7 @@ CREATE TABLE `nilai_matkul` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `kode` varchar(20) NOT NULL,
   `nama` varchar(100) NOT NULL,
-  `sks` int(5) NOT NULL,
+  `sks` varchar(20) NOT NULL,
   `predikat` varchar(10) NOT NULL,
   `is_graded` tinyint(1) NOT NULL DEFAULT 0,
   `highlight_color` varchar(20) NOT NULL,

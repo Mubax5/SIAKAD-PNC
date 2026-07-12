@@ -25,16 +25,28 @@ class ApiController extends Controller
     public function login()
     {
         $db = $this->getDb();
-        $email = $this->request->getVar('email');
-        $password = $this->request->getVar('password');
+        $email = '';
+        $password = '';
+
+        $rawInput = file_get_contents('php://input');
+        if (!empty($rawInput)) {
+            $json = json_decode($rawInput, true);
+            if (is_array($json)) {
+                $email = $json['email'] ?? '';
+                $password = $json['password'] ?? '';
+            }
+        }
 
         if (empty($email) || empty($password)) {
-            
-            $raw = $this->request->getJSON();
-            if ($raw) {
-                $email = $raw->email ?? '';
-                $password = $raw->password ?? '';
-            }
+            $email = $this->request->getPost('email') ?? $this->request->getGet('email') ?? '';
+            $password = $this->request->getPost('password') ?? $this->request->getGet('password') ?? '';
+        }
+
+        if (empty($email) || empty($password)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'NIM/Email dan Password wajib diisi.'
+            ])->setStatusCode(400);
         }
 
         $user = $db->table('users')
