@@ -52,7 +52,7 @@ class HalamanSurat extends ConsumerWidget {
               const Gap(28),
 
               
-              _bangunPermohonanTerbaru(context, suratAsync),
+              _bangunPermohonanTerbaru(context, ref, suratAsync),
 
               const Gap(28),
 
@@ -249,7 +249,7 @@ class HalamanSurat extends ConsumerWidget {
     );
   }
 
-  Widget _bangunPermohonanTerbaru(BuildContext context, AsyncValue<List<Map<String, dynamic>>> suratAsync) {
+  Widget _bangunPermohonanTerbaru(BuildContext context, WidgetRef ref, AsyncValue<List<Map<String, dynamic>>> suratAsync) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
