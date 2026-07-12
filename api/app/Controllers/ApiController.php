@@ -74,6 +74,13 @@ class ApiController extends Controller
         
         unset($user['password']);
 
+        $user['id'] = (int) $user['id'];
+        $user['semester'] = (int) $user['semester'];
+        $user['ipk'] = (double) $user['ipk'];
+        $user['sks_krs'] = (int) $user['sks_krs'];
+        $user['ta_progres'] = (int) $user['ta_progres'];
+        $user['presensi_persen'] = (int) $user['presensi_persen'];
+
         return $this->response->setJSON([
             'status' => 'success',
             'message' => 'Login berhasil.',
@@ -89,6 +96,12 @@ class ApiController extends Controller
             return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
         }
         unset($user['password']);
+        $user['id'] = (int) $user['id'];
+        $user['semester'] = (int) $user['semester'];
+        $user['ipk'] = (double) $user['ipk'];
+        $user['sks_krs'] = (int) $user['sks_krs'];
+        $user['ta_progres'] = (int) $user['ta_progres'];
+        $user['presensi_persen'] = (int) $user['presensi_persen'];
         return $this->response->setJSON(['status' => 'success', 'user' => $user]);
     }
 
@@ -96,6 +109,11 @@ class ApiController extends Controller
     {
         $db = $this->getDb();
         $matkul = $db->table('matkul')->where('user_id', $userId)->get()->getResultArray();
+        foreach ($matkul as &$m) {
+            $m['id'] = (int) $m['id'];
+            $m['user_id'] = (int) $m['user_id'];
+            $m['sks'] = (int) $m['sks'];
+        }
         return $this->response->setJSON([
             'status' => 'success',
             'data' => $matkul
@@ -112,11 +130,30 @@ class ApiController extends Controller
         $presensiAktivitas = $db->table('presensi_aktivitas')->where('user_id', $userId)->get()->getResultArray();
         $presensiJadwal = $db->table('presensi_jadwal_hari_ini')->where('user_id', $userId)->get()->getResultArray();
 
+        foreach ($presensiCepat as &$pc) {
+            $pc['id'] = (int) $pc['id'];
+            $pc['user_id'] = (int) $pc['user_id'];
+            $pc['is_marked'] = (int) $pc['is_marked'];
+        }
+        foreach ($presensiPerMk as &$pm) {
+            $pm['id'] = (int) $pm['id'];
+            $pm['user_id'] = (int) $pm['user_id'];
+            $pm['progress_val'] = (double) $pm['progress_val'];
+        }
+        foreach ($presensiAktivitas as &$pa) {
+            $pa['id'] = (int) $pa['id'];
+            $pa['user_id'] = (int) $pa['user_id'];
+        }
+        foreach ($presensiJadwal as &$pj) {
+            $pj['id'] = (int) $pj['id'];
+            $pj['user_id'] = (int) $pj['user_id'];
+        }
+
         return $this->response->setJSON([
             'status' => 'success',
-            'persentase_kehadiran' => $user ? $user['presensi_persen'] : 0,
-            'ipk' => $user ? $user['ipk'] : 0,
-            'sks' => $user ? $user['sks_krs'] : 0,
+            'persentase_kehadiran' => $user ? (int) $user['presensi_persen'] : 0,
+            'ipk' => $user ? (double) $user['ipk'] : 0.0,
+            'sks' => $user ? (int) $user['sks_krs'] : 0,
             'presensi_cepat' => $presensiCepat,
             'presensi_per_mk' => $presensiPerMk,
             'aktivitas_terbaru' => $presensiAktivitas,
@@ -153,9 +190,22 @@ class ApiController extends Controller
         $catatan = $db->table('ta_catatan_dosen')->where('user_id', $userId)->get()->getResultArray();
         $notifikasi = $db->table('ta_notifikasi')->where('user_id', $userId)->get()->getResultArray();
 
+        foreach ($timeline as &$t) {
+            $t['id'] = (int) $t['id'];
+            $t['user_id'] = (int) $t['user_id'];
+        }
+        foreach ($catatan as &$c) {
+            $c['id'] = (int) $c['id'];
+            $c['user_id'] = (int) $c['user_id'];
+        }
+        foreach ($notifikasi as &$n) {
+            $n['id'] = (int) $n['id'];
+            $n['user_id'] = (int) $n['user_id'];
+        }
+
         return $this->response->setJSON([
             'status' => 'success',
-            'ta_progres' => $user ? $user['ta_progres'] : 0,
+            'ta_progres' => $user ? (int) $user['ta_progres'] : 0,
             'ta_judul' => $user ? $user['ta_judul'] : '',
             'ta_dosen' => $user ? $user['ta_dosen'] : '',
             'ta_mulai' => $user ? $user['ta_mulai'] : '',
@@ -169,6 +219,11 @@ class ApiController extends Controller
     {
         $db = $this->getDb();
         $nilai = $db->table('nilai_matkul')->where('user_id', $userId)->get()->getResultArray();
+        foreach ($nilai as &$nl) {
+            $nl['id'] = (int) $nl['id'];
+            $nl['user_id'] = (int) $nl['user_id'];
+            $nl['is_graded'] = (int) $nl['is_graded'];
+        }
         return $this->response->setJSON([
             'status' => 'success',
             'data' => $nilai
@@ -179,6 +234,10 @@ class ApiController extends Controller
     {
         $db = $this->getDb();
         $surat = $db->table('surat_permohonan')->where('user_id', $userId)->get()->getResultArray();
+        foreach ($surat as &$sr) {
+            $sr['id'] = (int) $sr['id'];
+            $sr['user_id'] = (int) $sr['user_id'];
+        }
         return $this->response->setJSON([
             'status' => 'success',
             'data' => $surat
@@ -190,6 +249,10 @@ class ApiController extends Controller
         $db = $this->getDb();
         $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
         $riwayat = $db->table('keuangan_riwayat')->where('user_id', $userId)->get()->getResultArray();
+        foreach ($riwayat as &$rw) {
+            $rw['id'] = (int) $rw['id'];
+            $rw['user_id'] = (int) $rw['user_id'];
+        }
 
         return $this->response->setJSON([
             'status' => 'success',
