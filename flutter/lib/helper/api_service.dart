@@ -91,8 +91,12 @@ class ApiService {
     throw Exception('Gagal memuat data keuangan.');
   }
 
-  Future<void> bayarKeuangan(int userId) async {
-    final response = await http.post(Uri.parse('$baseUrl/user/keuangan/bayar/$userId'));
+  Future<void> bayarKeuangan(int userId, String metode) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/keuangan/bayar/$userId'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'metode': metode}),
+    );
     if (response.statusCode != 200) {
       throw Exception('Gagal memproses pembayaran.');
     }
@@ -125,6 +129,24 @@ class ApiService {
     );
     if (response.statusCode != 200) {
       throw Exception('Gagal mengajukan permohonan surat.');
+    }
+  }
+
+  Future<void> deleteSurat(int userId, int suratId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/user/surat/delete/$userId/$suratId'),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Gagal menghapus permohonan surat.');
+    }
+  }
+
+  Future<void> cancelSurat(int userId, int suratId) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/surat/cancel/$userId/$suratId'),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Gagal membatalkan permohonan surat.');
     }
   }
 

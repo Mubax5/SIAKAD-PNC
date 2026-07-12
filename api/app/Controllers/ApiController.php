@@ -80,6 +80,7 @@ class ApiController extends Controller
         $user['sks_krs'] = (int) $user['sks_krs'];
         $user['ta_progres'] = (int) $user['ta_progres'];
         $user['presensi_persen'] = (int) $user['presensi_persen'];
+        $user['avatar'] = 'https://ui-avatars.com/api/?name=' . urlencode($user['nama']) . '&background=0D8ABC&color=fff&size=128';
 
         return $this->response->setJSON([
             'status' => 'success',
@@ -102,6 +103,7 @@ class ApiController extends Controller
         $user['sks_krs'] = (int) $user['sks_krs'];
         $user['ta_progres'] = (int) $user['ta_progres'];
         $user['presensi_persen'] = (int) $user['presensi_persen'];
+        $user['avatar'] = 'https://ui-avatars.com/api/?name=' . urlencode($user['nama']) . '&background=0D8ABC&color=fff&size=128';
         return $this->response->setJSON(['status' => 'success', 'user' => $user]);
     }
 
@@ -267,17 +269,31 @@ class ApiController extends Controller
     public function bayarKeuangan($userId)
     {
         $db = $this->getDb();
+        $raw = $this->request->getJSON();
+        $metode = $raw->metode ?? 'Transfer Bank';
+
         $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
         if ($user) {
             $db->table('users')
                ->where('id', $userId)
                ->update([
-                   'keuangan_status' => 'Lunas',
+                   'keuangan_status'    => 'Lunas',
                    'keuangan_tunggakan' => 'Rp 0',
-                   'keuangan_terbayar' => $user['keuangan_total']
+                   'keuangan_terbayar'  => $user['keuangan_total']
                ]);
+            // Simpan riwayat pembayaran
+            if ($db->fieldExists('title', 'keuangan_riwayat')) {
+                $db->table('keuangan_riwayat')->insert([
+                    'user_id' => $userId,
+                    'title'   => 'Pembayaran UKT',
+                    'sub'     => $metode,
+                    'date'    => date('d M Y, H:i'),
+                    'amount'  => $user['keuangan_total'],
+                    'type'    => 'bayar',
+                ]);
+            }
             return $this->response->setJSON([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Pembayaran SPP/UKT berhasil diselesaikan.'
             ]);
         }
@@ -422,22 +438,53 @@ class ApiController extends Controller
     {
         $db = $this->getDb();
         $raw = $this->request->getJSON();
-        $jenis = $raw->jenis_surat ?? 'Surat Keterangan Aktif';
+        $jenis    = $raw->jenis_surat ?? 'Surat Keterangan Aktif';
+        $keperluan = $raw->keperluan ?? '';
 
         $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
         if ($user) {
             $db->table('surat_permohonan')->insert([
                 'user_id'          => $userId,
                 'jenis_surat'      => $jenis,
+                'keperluan'        => $keperluan,
                 'status'           => 'Diproses',
                 'tanggal_diajukan' => 'Diajukan pada ' . date('d M Y')
             ]);
             return $this->response->setJSON([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Permohonan surat berhasil diajukan.'
             ]);
         }
         return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
+    }
+
+    public function deleteSurat($userId, $suratId)
+    {
+        $db = $this->getDb();
+        $surat = $db->table('surat_permohonan')
+                    ->where('id', $suratId)
+                    ->where('user_id', $userId)
+                    ->get()->getRowArray();
+        if (!$surat) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Permohonan tidak ditemukan.'])->setStatusCode(404);
+        }
+        $db->table('surat_permohonan')->where('id', $suratId)->where('user_id', $userId)->delete();
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Permohonan berhasil dihapus.']);
+    }
+
+    public function cancelSurat($userId, $suratId)
+    {
+        $db = $this->getDb();
+        $surat = $db->table('surat_permohonan')
+                    ->where('id', $suratId)
+                    ->where('user_id', $userId)
+                    ->where('status', 'Diproses')
+                    ->get()->getRowArray();
+        if (!$surat) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Permohonan tidak ditemukan atau tidak dapat dibatalkan.'])->setStatusCode(404);
+        }
+        $db->table('surat_permohonan')->where('id', $suratId)->update(['status' => 'Dibatalkan']);
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Permohonan berhasil dibatalkan.']);
     }
 
     public function getInformasi()

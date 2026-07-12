@@ -18,67 +18,84 @@ class _HalamanKeuanganState extends ConsumerState<HalamanKeuangan> {
   bool _isProcessingPayment = false;
 
   void _simulasiPembayaran(int userId) {
+    String selectedMethod = 'Transfer Bank (Virtual Account)';
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Pilih Metode Pembayaran',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: WarnaAplikasi.teksUtama,
-                  fontFamily: 'Inter',
-                ),
-              ),
-              const Gap(16),
-              _bangunPilihanMetode(
-                label: 'Transfer Bank (Virtual Account)',
-                iconData: LucideIcons.landmark,
-                iconColor: WarnaAplikasi.krsIcon,
-                iconBg: WarnaAplikasi.krsTint,
-              ),
-              const Gap(12),
-              _bangunPilihanMetode(
-                label: 'E-Wallet (OVO, GoPay, DANA)',
-                iconData: LucideIcons.wallet,
-                iconColor: WarnaAplikasi.transkripIcon,
-                iconBg: WarnaAplikasi.transkripTint,
-              ),
-              const Gap(24),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _prosesTransaksi(userId);
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 0),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  backgroundColor: WarnaAplikasi.utama,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Container(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pilih Metode Pembayaran',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: WarnaAplikasi.teksUtama,
+                      fontFamily: 'Inter',
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Konfirmasi & Bayar',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
+                  const Gap(16),
+                  _bangunPilihanMetode(
+                    label: 'Transfer Bank (Virtual Account)',
+                    iconData: LucideIcons.landmark,
+                    iconColor: WarnaAplikasi.krsIcon,
+                    iconBg: WarnaAplikasi.krsTint,
+                    isSelected: selectedMethod == 'Transfer Bank (Virtual Account)',
+                    onTap: () {
+                      setModalState(() {
+                        selectedMethod = 'Transfer Bank (Virtual Account)';
+                      });
+                    },
                   ),
-                ),
+                  const Gap(12),
+                  _bangunPilihanMetode(
+                    label: 'E-Wallet (OVO, GoPay, DANA)',
+                    iconData: LucideIcons.wallet,
+                    iconColor: WarnaAplikasi.transkripIcon,
+                    iconBg: WarnaAplikasi.transkripTint,
+                    isSelected: selectedMethod == 'E-Wallet (OVO, GoPay, DANA)',
+                    onTap: () {
+                      setModalState(() {
+                        selectedMethod = 'E-Wallet (OVO, GoPay, DANA)';
+                      });
+                    },
+                  ),
+                  const Gap(24),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _prosesTransaksi(userId, selectedMethod);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 0),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      backgroundColor: WarnaAplikasi.utama,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Text(
+                      'Konfirmasi & Bayar',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -89,49 +106,62 @@ class _HalamanKeuanganState extends ConsumerState<HalamanKeuangan> {
     required IconData iconData,
     required Color iconColor,
     required Color iconBg,
+    required bool isSelected,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: WarnaAplikasi.latarBelakang,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: const Color(0xFFE2E8F0)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: iconBg,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(iconData, color: iconColor, size: 16),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected ? WarnaAplikasi.utama.withOpacity(0.05) : WarnaAplikasi.latarBelakang,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? WarnaAplikasi.utama : const Color(0xFFE2E8F0),
+            width: isSelected ? 1.5 : 1,
           ),
-          const Gap(12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: WarnaAplikasi.teksUtama,
-                fontFamily: 'Inter',
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: iconBg,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(iconData, color: iconColor, size: 16),
+            ),
+            const Gap(12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: WarnaAplikasi.teksUtama,
+                  fontFamily: 'Inter',
+                ),
               ),
             ),
-          ),
-          const Icon(LucideIcons.circle, size: 16, color: WarnaAplikasi.teksSekunder),
-        ],
+            Icon(
+              isSelected ? LucideIcons.checkCircle2 : LucideIcons.circle,
+              size: 16,
+              color: isSelected ? WarnaAplikasi.utama : WarnaAplikasi.teksSekunder,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void _prosesTransaksi(int userId) async {
+  void _prosesTransaksi(int userId, String metode) async {
     setState(() {
       _isProcessingPayment = true;
     });
 
     try {
-      await ref.read(apiServiceProvider).bayarKeuangan(userId);
+      await ref.read(apiServiceProvider).bayarKeuangan(userId, metode);
       ref.invalidate(keuanganProvider);
       await ref.read(authProvider.notifier).refreshProfile();
       if (mounted) {

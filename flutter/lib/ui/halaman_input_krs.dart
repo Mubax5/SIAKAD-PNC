@@ -49,6 +49,8 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
   @override
   void initState() {
     super.initState();
+    final user = ref.read(authProvider);
+    _sudahDiajukan = user != null && (user['sks_krs'] ?? 0) > 0;
     
     _daftarMatkul = [
       
@@ -62,7 +64,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Sen, Rab 08:00-10:00',
         dosen: 'Cahya Vikasari, S.T., M.Eng.',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2105',
@@ -74,7 +76,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Sen, Rab 08:00-10:00',
         dosen: 'Fajar Mahardika, S.Kom., M.Kom.',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2106',
@@ -86,7 +88,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Sen, Rab 08:00-10:00',
         dosen: 'Nur Wahyu Rahadi, S.Kom, M.Eng.',
-        isChecked: true,
+        isChecked: false,
       ),
 
       
@@ -100,7 +102,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Sel 10:00-12:00',
         dosen: 'Lecturer A',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2108',
@@ -112,7 +114,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Kam 08:00-10:00',
         dosen: 'Lecturer B',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2109',
@@ -124,7 +126,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas B',
         hariJam: 'Jum 13:30-15:30',
         dosen: 'Lecturer C',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2110',
@@ -136,7 +138,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Sel 08:00-10:00',
         dosen: 'Lecturer D',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2111',
@@ -148,7 +150,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Kam 10:00-12:00',
         dosen: 'Lecturer E',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2112',
@@ -160,7 +162,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Jum 08:00-09:00',
         dosen: 'Lecturer F',
-        isChecked: true,
+        isChecked: false,
       ),
       MataKuliahKRS(
         id: 'INF2113',
@@ -172,7 +174,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         kelas: 'Kelas A',
         hariJam: 'Jum 09:00-10:00',
         dosen: 'Lecturer G',
-        isChecked: true,
+        isChecked: false,
       ),
     ];
   }
@@ -425,6 +427,9 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
 
   
   Widget _bangunFilterDropdowns() {
+    final user = ref.read(authProvider);
+    final semester = user?['semester'] ?? 3;
+
     return Row(
       children: [
         
@@ -437,17 +442,17 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
+              children: [
                 Text(
-                  'Semester 6',
-                  style: TextStyle(
+                  'Semester $semester',
+                  style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: Color(0xFF0F172A),
                     fontFamily: 'Inter',
                   ),
                 ),
-                Icon(
+                const Icon(
                   LucideIcons.chevronDown,
                   size: 16,
                   color: Color(0xFF64748B),
@@ -877,7 +882,7 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
                   const CircleAvatar(
                     radius: 20,
                     backgroundImage: NetworkImage(
-                      'https://avatar.iran.liara.run/public/boy?username=Nur',
+                      'https://ui-avatars.com/api/?name=Nur+Wahyu+Rahadi&background=0284C7&color=fff&size=128',
                     ),
                     backgroundColor: Color(0xFFE2E8F0),
                   ),
@@ -914,38 +919,40 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFFFBEB),
+                  color: _sudahDiajukan ? const Color(0xFFFFFBEB) : const Color(0xFFF8FAFC),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: const Color(0xFFFEF3C7)),
+                  border: Border.all(color: _sudahDiajukan ? const Color(0xFFFEF3C7) : const Color(0xFFE2E8F0)),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
-                      LucideIcons.clock,
+                    Icon(
+                      _sudahDiajukan ? LucideIcons.clock : LucideIcons.edit2,
                       size: 16,
-                      color: Color(0xFFD97706),
+                      color: _sudahDiajukan ? const Color(0xFFD97706) : const Color(0xFF64748B),
                     ),
                     const Gap(8),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Menunggu Persetujuan',
+                            _sudahDiajukan ? 'Menunggu Persetujuan' : 'Belum Diajukan',
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFFB45309),
+                              color: _sudahDiajukan ? const Color(0xFFB45309) : const Color(0xFF334155),
                               fontFamily: 'Inter',
                             ),
                           ),
-                          Gap(3),
+                          const Gap(3),
                           Text(
-                            'KRS Anda telah dikirim untuk persetujuan pada 15 Jan 2024, 14:30',
+                            _sudahDiajukan
+                                ? 'KRS Anda telah dikirim untuk persetujuan pada 15 Jan 2026, 14:30'
+                                : 'Silakan pilih mata kuliah di atas dan simpan pilihan KRS Anda.',
                             style: TextStyle(
                               fontSize: 11,
-                              color: Color(0xFFB45309),
+                              color: _sudahDiajukan ? const Color(0xFFB45309) : const Color(0xFF64748B),
                               height: 1.3,
                               fontFamily: 'Inter',
                             ),
@@ -964,10 +971,10 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: null, 
-                  icon: const Icon(LucideIcons.send, size: 14),
-                  label: const Text(
-                    'Terkirim untuk Persetujuan',
-                    style: TextStyle(
+                  icon: Icon(_sudahDiajukan ? LucideIcons.send : LucideIcons.circleDot, size: 14),
+                  label: Text(
+                    _sudahDiajukan ? 'Terkirim untuk Persetujuan' : 'Kirim setelah Simpan Pilihan',
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Inter',

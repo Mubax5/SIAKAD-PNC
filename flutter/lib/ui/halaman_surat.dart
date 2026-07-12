@@ -289,6 +289,7 @@ class HalamanSurat extends ConsumerWidget {
               }
               return Column(
                 children: list.map((item) {
+                  final id = item['id'] as int;
                   final jenis = item['jenis_surat'];
                   final status = item['status'];
                   final date = item['tanggal_diajukan'];
@@ -307,24 +308,49 @@ class HalamanSurat extends ConsumerWidget {
                     leftIcon = LucideIcons.contact;
                     leftIconColor = WarnaAplikasi.krsIcon;
                     leftIconBg = WarnaAplikasi.krsTint;
-                    rightWidget = const Icon(LucideIcons.clock, color: WarnaAplikasi.teksSekunder, size: 18);
+                    rightWidget = IconButton(
+                      icon: const Icon(LucideIcons.xCircle, color: WarnaAplikasi.bahaya, size: 18),
+                      onPressed: () => _konfirmasiBatal(context, ref, id, jenis),
+                    );
                   } else if (status == 'Ditolak') {
                     statusColor = WarnaAplikasi.bahaya;
                     statusBg = WarnaAplikasi.bahayaTint;
                     leftIcon = LucideIcons.pause;
                     leftIconColor = WarnaAplikasi.transkripIcon;
                     leftIconBg = WarnaAplikasi.transkripTint;
-                    rightWidget = const Icon(LucideIcons.info, color: WarnaAplikasi.teksSekunder, size: 18);
-                  } else {
                     rightWidget = IconButton(
-                      icon: const Icon(LucideIcons.download, color: WarnaAplikasi.krsIcon, size: 18),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Mengunduh dokumen $jenis...'),
-                          ),
-                        );
-                      },
+                      icon: const Icon(LucideIcons.trash2, color: WarnaAplikasi.bahaya, size: 18),
+                      onPressed: () => _konfirmasiHapus(context, ref, id, jenis),
+                    );
+                  } else if (status == 'Dibatalkan') {
+                    statusColor = WarnaAplikasi.teksSekunder;
+                    statusBg = const Color(0xFFF1F5F9);
+                    leftIcon = LucideIcons.xCircle;
+                    leftIconColor = WarnaAplikasi.teksSekunder;
+                    leftIconBg = const Color(0xFFE2E8F0);
+                    rightWidget = IconButton(
+                      icon: const Icon(LucideIcons.trash2, color: WarnaAplikasi.bahaya, size: 18),
+                      onPressed: () => _konfirmasiHapus(context, ref, id, jenis),
+                    );
+                  } else {
+                    rightWidget = Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          icon: const Icon(LucideIcons.download, color: WarnaAplikasi.krsIcon, size: 18),
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Mengunduh dokumen $jenis...'),
+                              ),
+                            );
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(LucideIcons.trash2, color: WarnaAplikasi.bahaya, size: 18),
+                          onPressed: () => _konfirmasiHapus(context, ref, id, jenis),
+                        ),
+                      ],
                     );
                   }
 
@@ -629,6 +655,106 @@ class HalamanSurat extends ConsumerWidget {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _konfirmasiBatal(BuildContext context, WidgetRef ref, int id, String jenis) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Batalkan Pengajuan', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.bold)),
+        content: Text('Apakah Anda yakin ingin membatalkan pengajuan $jenis?', style: const TextStyle(fontFamily: 'Inter')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal', style: TextStyle(fontFamily: 'Inter', color: WarnaAplikasi.teksSekunder)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final user = ref.read(authProvider);
+              if (user != null) {
+                try {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const Center(child: CircularProgressIndicator()),
+                  );
+                  await ref.read(apiServiceProvider).cancelSurat(user['id'], id);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ref.invalidate(suratProvider);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Pengajuan berhasil dibatalkan.'),
+                        backgroundColor: WarnaAplikasi.sukses,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Gagal membatalkan pengajuan: $e')),
+                    );
+                  }
+                }
+              }
+            },
+            child: const Text('Ya, Batalkan', style: TextStyle(fontFamily: 'Inter', color: WarnaAplikasi.bahaya)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _konfirmasiHapus(BuildContext context, WidgetRef ref, int id, String jenis) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Hapus Pengajuan', style: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.bold)),
+        content: Text('Apakah Anda yakin ingin menghapus riwayat pengajuan $jenis?', style: const TextStyle(fontFamily: 'Inter')),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal', style: TextStyle(fontFamily: 'Inter', color: WarnaAplikasi.teksSekunder)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final user = ref.read(authProvider);
+              if (user != null) {
+                try {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const Center(child: CircularProgressIndicator()),
+                  );
+                  await ref.read(apiServiceProvider).deleteSurat(user['id'], id);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ref.invalidate(suratProvider);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Pengajuan berhasil dihapus.'),
+                        backgroundColor: WarnaAplikasi.sukses,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Gagal menghapus pengajuan: $e')),
+                    );
+                  }
+                }
+              }
+            },
+            child: const Text('Ya, Hapus', style: TextStyle(fontFamily: 'Inter', color: WarnaAplikasi.bahaya)),
           ),
         ],
       ),

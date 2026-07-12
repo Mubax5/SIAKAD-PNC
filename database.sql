@@ -42,29 +42,54 @@ CREATE TABLE `matkul` (
   `nama` varchar(100) NOT NULL,
   `sks` int(5) NOT NULL,
   `dosen` varchar(100) NOT NULL,
-  `jadwal` varchar(100) NOT NULL,
+  `jadwal` varchar(150) NOT NULL,
+  `ruang` varchar(50) NOT NULL,
   `kelas` varchar(50) NOT NULL,
   `color_hex` varchar(20) NOT NULL,
   `bg_hex` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `matkul` (`id`, `user_id`, `kode`, `nama`, `sks`, `dosen`, `jadwal`, `kelas`, `color_hex`, `bg_hex`) VALUES
-(1, 1, 'INF2104', 'Praktikum Rekayasa Perangkat Lunak', 4, 'Cahya Vikasari, S.T., M.Eng.', 'Senin, 08:00 - 10:30 WIB', 'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
-(2, 1, 'INF2105', 'Desain Interaksi Pengguna', 2, 'Fajar Mahardika, S.Kom., M.Kom.', 'Senin, 13:00 - 14:40 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(3, 1, 'CS401', 'Praktikum Pemrograman Web 2', 4, 'Haryanto, S.T., M.T.', 'Rabu, 08:00 - 10:30 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(4, 1, 'CS403', 'Matematika Diskrit', 2, 'Dr. Irwan, M.Si.', 'Rabu, 13:00 - 14:40 WIB', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
-(5, 2, 'INF2104', 'Praktikum Rekayasa Perangkat Lunak', 4, 'Cahya Vikasari, S.T., M.Eng.', 'Senin, 08:00 - 10:30 WIB', 'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
-(6, 2, 'INF2105', 'Desain Interaksi Pengguna', 2, 'Fajar Mahardika, S.Kom., M.Kom.', 'Senin, 13:00 - 14:40 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(7, 2, 'CS401', 'Praktikum Pemrograman Web 2', 4, 'Haryanto, S.T., M.T.', 'Rabu, 08:00 - 10:30 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(8, 2, 'CS403', 'Matematika Diskrit', 2, 'Dr. Irwan, M.Si.', 'Rabu, 13:00 - 14:40 WIB', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
-(9, 3, 'INF2104', 'Praktikum Rekayasa Perangkat Lunak', 4, 'Cahya Vikasari, S.T., M.Eng.', 'Senin, 08:00 - 10:30 WIB', 'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
-(10, 3, 'INF2105', 'Desain Interaksi Pengguna', 2, 'Fajar Mahardika, S.Kom., M.Kom.', 'Senin, 13:00 - 14:40 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(11, 3, 'CS401', 'Praktikum Pemrograman Web 2', 4, 'Haryanto, S.T., M.T.', 'Rabu, 08:00 - 10:30 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(12, 3, 'CS403', 'Matematika Diskrit', 2, 'Dr. Irwan, M.Si.', 'Rabu, 13:00 - 14:40 WIB', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
-(13, 4, 'INF2104', 'Praktikum Rekayasa Perangkat Lunak', 4, 'Cahya Vikasari, S.T., M.Eng.', 'Senin, 08:00 - 10:30 WIB', 'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
-(14, 4, 'INF2105', 'Desain Interaksi Pengguna', 2, 'Fajar Mahardika, S.Kom., M.Kom.', 'Senin, 13:00 - 14:40 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(15, 4, 'CS401', 'Praktikum Pemrograman Web 2', 4, 'Haryanto, S.T., M.T.', 'Rabu, 08:00 - 10:30 WIB', 'Kelas A', 'FF10B981', 'FFE6FDF5'),
-(16, 4, 'CS403', 'Matematika Diskrit', 2, 'Dr. Irwan, M.Si.', 'Rabu, 13:00 - 14:40 WIB', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF');
+INSERT INTO `matkul` (`id`, `user_id`, `kode`, `nama`, `sks`, `dosen`, `jadwal`, `ruang`, `kelas`, `color_hex`, `bg_hex`) VALUES
+-- User 1 (Hilmi Mubarok) - Semester 4 TI
+(1,  1, 'TI4201', 'Pemrograman Mobile',             4, 'Fajar Jm, S.Kom., M.Kom.',          'Senin, 07:30 - 11:10 WIB', 'J.5.7',  'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
+(2,  1, 'TI4202', 'Basis Data Lanjut',              4, 'Annas Setiawan P., S.Kom., M.Eng.', 'Senin, 11:15 - 15:30 WIB', 'J.5.6',  'Kelas A', 'FF10B981', 'FFE6FDF5'),
+(3,  1, 'TI4203', 'Pemrograman Berorientasi Objek', 4, 'Nur Wahyu Rahadi, S.Kom, M.Eng.',  'Selasa, 11:15 - 15:30 WIB','J.4.10', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
+(4,  1, 'TI4204', 'Manajemen Informasi & Sistem',   4, 'A. Dwi Setiyawan, S.Kom., M.Cs.',  'Rabu, 07:30 - 11:10 WIB',  'J.5.10', 'Kelas A', 'FFEF4444', 'FFFEF2F2'),
+(5,  1, 'TI4205', 'Etika Profesi',                  2, 'Luthfi Fatah S., S.T., M.T.',       'Rabu, 11:15 - 13:50 WIB',  'I.3.7',  'Kelas A', 'FFF97316', 'FFFFF7ED'),
+(6,  1, 'TI4206', 'Statistika',                    2, 'Laut Ayu U., S.Si., M.Si.',         'Rabu, 13:50 - 15:30 WIB',  'I.4.5',  'Kelas A', 'FF0EA5E9', 'FFF0F9FF'),
+(7,  1, 'TI4207', 'Metodologi Penelitian TI',      2, 'Mulyono Irianto, S.T., M.T.',       'Kamis, 07:30 - 09:10 WIB', 'I.3.5',  'Kelas A', 'FF14B8A6', 'FFF0FDFA'),
+(8,  1, 'TI4208', 'Manajemen Proyek',              2, 'Riyanto Darmawan, S.Kom., M.T.',    'Kamis, 09:25 - 11:10 WIB', 'I.3.5',  'Kelas A', 'FFEC4899', 'FFFFF0F7'),
+(9,  1, 'TI4209', 'Pemrograman Framework',         4, 'Fajar Jm, S.Kom., M.Kom.',          'Kamis, 11:15 - 15:30 WIB', 'J.5.7',  'Kelas A', 'FF6366F1', 'FFEEF2FF'),
+-- User 2 (Khalifah Brilianti)
+(10, 2, 'TI4201', 'Pemrograman Mobile',             4, 'Fajar Jm, S.Kom., M.Kom.',          'Senin, 07:30 - 11:10 WIB', 'J.5.7',  'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
+(11, 2, 'TI4202', 'Basis Data Lanjut',              4, 'Annas Setiawan P., S.Kom., M.Eng.', 'Senin, 11:15 - 15:30 WIB', 'J.5.6',  'Kelas A', 'FF10B981', 'FFE6FDF5'),
+(12, 2, 'TI4203', 'Pemrograman Berorientasi Objek', 4, 'Nur Wahyu Rahadi, S.Kom, M.Eng.',  'Selasa, 11:15 - 15:30 WIB','J.4.10', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
+(13, 2, 'TI4204', 'Manajemen Informasi & Sistem',   4, 'A. Dwi Setiyawan, S.Kom., M.Cs.',  'Rabu, 07:30 - 11:10 WIB',  'J.5.10', 'Kelas A', 'FFEF4444', 'FFFEF2F2'),
+(14, 2, 'TI4205', 'Etika Profesi',                  2, 'Luthfi Fatah S., S.T., M.T.',       'Rabu, 11:15 - 13:50 WIB',  'I.3.7',  'Kelas A', 'FFF97316', 'FFFFF7ED'),
+(15, 2, 'TI4206', 'Statistika',                    2, 'Laut Ayu U., S.Si., M.Si.',         'Rabu, 13:50 - 15:30 WIB',  'I.4.5',  'Kelas A', 'FF0EA5E9', 'FFF0F9FF'),
+(16, 2, 'TI4207', 'Metodologi Penelitian TI',      2, 'Mulyono Irianto, S.T., M.T.',       'Kamis, 07:30 - 09:10 WIB', 'I.3.5',  'Kelas A', 'FF14B8A6', 'FFF0FDFA'),
+(17, 2, 'TI4208', 'Manajemen Proyek',              2, 'Riyanto Darmawan, S.Kom., M.T.',    'Kamis, 09:25 - 11:10 WIB', 'I.3.5',  'Kelas A', 'FFEC4899', 'FFFFF0F7'),
+(18, 2, 'TI4209', 'Pemrograman Framework',         4, 'Fajar Jm, S.Kom., M.Kom.',          'Kamis, 11:15 - 15:30 WIB', 'J.5.7',  'Kelas A', 'FF6366F1', 'FFEEF2FF'),
+-- User 3 (Nadjwa Naela)
+(19, 3, 'TI4201', 'Pemrograman Mobile',             4, 'Fajar Jm, S.Kom., M.Kom.',          'Senin, 07:30 - 11:10 WIB', 'J.5.7',  'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
+(20, 3, 'TI4202', 'Basis Data Lanjut',              4, 'Annas Setiawan P., S.Kom., M.Eng.', 'Senin, 11:15 - 15:30 WIB', 'J.5.6',  'Kelas A', 'FF10B981', 'FFE6FDF5'),
+(21, 3, 'TI4203', 'Pemrograman Berorientasi Objek', 4, 'Nur Wahyu Rahadi, S.Kom, M.Eng.',  'Selasa, 11:15 - 15:30 WIB','J.4.10', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
+(22, 3, 'TI4204', 'Manajemen Informasi & Sistem',   4, 'A. Dwi Setiyawan, S.Kom., M.Cs.',  'Rabu, 07:30 - 11:10 WIB',  'J.5.10', 'Kelas A', 'FFEF4444', 'FFFEF2F2'),
+(23, 3, 'TI4205', 'Etika Profesi',                  2, 'Luthfi Fatah S., S.T., M.T.',       'Rabu, 11:15 - 13:50 WIB',  'I.3.7',  'Kelas A', 'FFF97316', 'FFFFF7ED'),
+(24, 3, 'TI4206', 'Statistika',                    2, 'Laut Ayu U., S.Si., M.Si.',         'Rabu, 13:50 - 15:30 WIB',  'I.4.5',  'Kelas A', 'FF0EA5E9', 'FFF0F9FF'),
+(25, 3, 'TI4207', 'Metodologi Penelitian TI',      2, 'Mulyono Irianto, S.T., M.T.',       'Kamis, 07:30 - 09:10 WIB', 'I.3.5',  'Kelas A', 'FF14B8A6', 'FFF0FDFA'),
+(26, 3, 'TI4208', 'Manajemen Proyek',              2, 'Riyanto Darmawan, S.Kom., M.T.',    'Kamis, 09:25 - 11:10 WIB', 'I.3.5',  'Kelas A', 'FFEC4899', 'FFFFF0F7'),
+(27, 3, 'TI4209', 'Pemrograman Framework',         4, 'Fajar Jm, S.Kom., M.Kom.',          'Kamis, 11:15 - 15:30 WIB', 'J.5.7',  'Kelas A', 'FF6366F1', 'FFEEF2FF'),
+-- User 4 (Suryo Nugroho)
+(28, 4, 'TI4201', 'Pemrograman Mobile',             4, 'Fajar Jm, S.Kom., M.Kom.',          'Senin, 07:30 - 11:10 WIB', 'J.5.7',  'Kelas A', 'FF1A73E8', 'FFF1F7FF'),
+(29, 4, 'TI4202', 'Basis Data Lanjut',              4, 'Annas Setiawan P., S.Kom., M.Eng.', 'Senin, 11:15 - 15:30 WIB', 'J.5.6',  'Kelas A', 'FF10B981', 'FFE6FDF5'),
+(30, 4, 'TI4203', 'Pemrograman Berorientasi Objek', 4, 'Nur Wahyu Rahadi, S.Kom, M.Eng.',  'Selasa, 11:15 - 15:30 WIB','J.4.10', 'Kelas A', 'FF8B5CF6', 'FFF5F3FF'),
+(31, 4, 'TI4204', 'Manajemen Informasi & Sistem',   4, 'A. Dwi Setiyawan, S.Kom., M.Cs.',  'Rabu, 07:30 - 11:10 WIB',  'J.5.10', 'Kelas A', 'FFEF4444', 'FFFEF2F2'),
+(32, 4, 'TI4205', 'Etika Profesi',                  2, 'Luthfi Fatah S., S.T., M.T.',       'Rabu, 11:15 - 13:50 WIB',  'I.3.7',  'Kelas A', 'FFF97316', 'FFFFF7ED'),
+(33, 4, 'TI4206', 'Statistika',                    2, 'Laut Ayu U., S.Si., M.Si.',         'Rabu, 13:50 - 15:30 WIB',  'I.4.5',  'Kelas A', 'FF0EA5E9', 'FFF0F9FF'),
+(34, 4, 'TI4207', 'Metodologi Penelitian TI',      2, 'Mulyono Irianto, S.T., M.T.',       'Kamis, 07:30 - 09:10 WIB', 'I.3.5',  'Kelas A', 'FF14B8A6', 'FFF0FDFA'),
+(35, 4, 'TI4208', 'Manajemen Proyek',              2, 'Riyanto Darmawan, S.Kom., M.T.',    'Kamis, 09:25 - 11:10 WIB', 'I.3.5',  'Kelas A', 'FFEC4899', 'FFFFF0F7'),
+(36, 4, 'TI4209', 'Pemrograman Framework',         4, 'Fajar Jm, S.Kom., M.Kom.',          'Kamis, 11:15 - 15:30 WIB', 'J.5.7',  'Kelas A', 'FF6366F1', 'FFEEF2FF');
 
 DROP TABLE IF EXISTS `presensi_cepat`;
 CREATE TABLE `presensi_cepat` (
