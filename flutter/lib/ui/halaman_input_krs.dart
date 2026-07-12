@@ -681,19 +681,39 @@ class _HalamanInputKrsState extends ConsumerState<HalamanInputKrs> {
         ),
 
         ElevatedButton(
-          onPressed: () {
-            setState(() {
-              _sudahDiajukan = true;
-            });
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'KRS berhasil diajukan!',
-                  style: TextStyle(fontFamily: 'Inter'),
-                ),
-                backgroundColor: WarnaAplikasi.sukses,
-              ),
-            );
+          onPressed: () async {
+            final user = ref.read(authProvider);
+            if (user != null) {
+              try {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (context) => const Center(child: CircularProgressIndicator()),
+                );
+                await ref.read(apiServiceProvider).submitKrs(user['id'], _totalSKS);
+                await ref.read(authProvider.notifier).refreshProfile();
+                if (!mounted) return;
+                Navigator.pop(context);
+                setState(() {
+                  _sudahDiajukan = true;
+                });
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'KRS berhasil diajukan!',
+                      style: TextStyle(fontFamily: 'Inter'),
+                    ),
+                    backgroundColor: WarnaAplikasi.sukses,
+                  ),
+                );
+              } catch (e) {
+                if (!mounted) return;
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Gagal mengajukan KRS: $e')),
+                );
+              }
+            }
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF01456A),

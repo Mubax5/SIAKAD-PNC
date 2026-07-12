@@ -77,7 +77,7 @@ flutter run
 
 ---
 
-## Informasi Akun Uji Coba (3 User Berbeda)
+## Informasi Akun Uji Coba (4 User Berbeda)
 
 Anda dapat login menggunakan **Email** atau **NIM** dengan password **`123456`**. Masing-masing akun menampilkan data akademis, jadwal, nilai, presensi, keuangan, dan MBKM yang unik:
 
@@ -85,13 +85,17 @@ Anda dapat login menggunakan **Email** atau **NIM** dengan password **`123456`**
    - NIM: `240202078`
    - Email: `hilmi@siakad.ac.id`
 
-2. **Budi Santoso** (Sistem Informasi - Semester 5)
-   - NIM: `240202001`
-   - Email: `budi@siakad.ac.id`
+2. **Khalifah Brilianti R** (Teknik Informatika - Semester 5)
+   - NIM: `240102080`
+   - Email: `khalifah@siakad.ac.id`
 
-3. **Siti Aminah** (Teknik Mesin - Semester 7)
-   - NIM: `240202002`
-   - Email: `siti@siakad.ac.id`
+3. **Nadjwa Naela Aziz** (Teknik Informatika - Semester 3)
+   - NIM: `240102087`
+   - Email: `nadjwa@siakad.ac.id`
+
+4. **Suryo Nugroho** (Teknik Informatika - Semester 5)
+   - NIM: `240202094`
+   - Email: `suryo@siakad.ac.id`
 
 ---
 

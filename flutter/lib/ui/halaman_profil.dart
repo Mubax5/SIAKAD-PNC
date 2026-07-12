@@ -4,6 +4,8 @@ import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../helper/warna_aplikasi.dart';
 import '../helper/api_service.dart';
+import 'package:go_router/go_router.dart';
+import '../helper/rute_aplikasi.dart';
 
 
 
@@ -245,7 +247,34 @@ class _HalamanProfilState extends ConsumerState<HalamanProfil> {
               _bangunReadOnlyField('Status Mahasiswa', 'Aktif'),
               const Gap(14),
               _bangunReadOnlyField('Target Lulus', '2025'),
-
+              const Gap(32),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    ref.read(authProvider.notifier).logout();
+                    context.go(RuteAplikasi.login);
+                  },
+                  icon: const Icon(LucideIcons.logOut, size: 18),
+                  label: const Text(
+                    'Keluar dari Aplikasi',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: WarnaAplikasi.bahaya,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
               const Gap(24),
             ],
           ),

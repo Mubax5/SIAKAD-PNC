@@ -133,6 +133,7 @@ class _HalamanKeuanganState extends ConsumerState<HalamanKeuangan> {
     try {
       await ref.read(apiServiceProvider).bayarKeuangan(userId);
       ref.invalidate(keuanganProvider);
+      await ref.read(authProvider.notifier).refreshProfile();
       if (mounted) {
         setState(() {
           _isProcessingPayment = false;

@@ -105,6 +105,28 @@ class ApiService {
     }
     throw Exception('Gagal memuat data MBKM.');
   }
+
+  Future<void> submitKrs(int userId, int sks) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/krs/submit/$userId'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'sks': sks}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Gagal mengajukan KRS.');
+    }
+  }
+
+  Future<void> addSurat(int userId, String jenis) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/surat/add/$userId'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'jenis_surat': jenis}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Gagal mengajukan permohonan surat.');
+    }
+  }
 }
 
 
@@ -127,6 +149,13 @@ class AuthNotifier extends Notifier<Map<String, dynamic>?> {
 
   void updateProfile(Map<String, dynamic> newProfile) {
     state = newProfile;
+  }
+
+  Future<void> refreshProfile() async {
+    if (state == null) return;
+    final userId = state!['id'];
+    final res = await ref.read(apiServiceProvider).getProfile(userId);
+    state = Map<String, dynamic>.from(res['user']);
   }
 }
 

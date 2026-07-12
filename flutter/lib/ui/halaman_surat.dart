@@ -47,7 +47,7 @@ class HalamanSurat extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               
-              _bangunGridPengajuan(context),
+              _bangunGridPengajuan(context, ref),
 
               const Gap(28),
 
@@ -72,7 +72,7 @@ class HalamanSurat extends ConsumerWidget {
     );
   }
 
-  Widget _bangunGridPengajuan(BuildContext context) {
+  Widget _bangunGridPengajuan(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         Row(
@@ -80,6 +80,7 @@ class HalamanSurat extends ConsumerWidget {
             Expanded(
               child: _bangunKartuPengajuan(
                 context: context,
+                ref: ref,
                 judul: 'Pengajuan Cuti',
                 status: 'Tersedia',
                 statusBg: WarnaAplikasi.suksesTint,
@@ -93,6 +94,7 @@ class HalamanSurat extends ConsumerWidget {
             Expanded(
               child: _bangunKartuPengajuan(
                 context: context,
+                ref: ref,
                 judul: 'Pengajuan Transkrip',
                 status: 'Tersedia',
                 statusBg: WarnaAplikasi.suksesTint,
@@ -110,6 +112,7 @@ class HalamanSurat extends ConsumerWidget {
             Expanded(
               child: _bangunKartuPengajuan(
                 context: context,
+                ref: ref,
                 judul: 'Surat Keterangan Aktif',
                 status: 'Tersedia',
                 statusBg: WarnaAplikasi.suksesTint,
@@ -123,6 +126,7 @@ class HalamanSurat extends ConsumerWidget {
             Expanded(
               child: _bangunKartuPengajuan(
                 context: context,
+                ref: ref,
                 judul: 'Pendaftaran Wisuda',
                 status: 'Cek Persyaratan',
                 statusBg: WarnaAplikasi.peringatanTint,
@@ -140,6 +144,7 @@ class HalamanSurat extends ConsumerWidget {
 
   Widget _bangunKartuPengajuan({
     required BuildContext context,
+    required WidgetRef ref,
     required String judul,
     required String status,
     required Color statusBg,
@@ -149,13 +154,35 @@ class HalamanSurat extends ConsumerWidget {
     required Color iconBg,
   }) {
     return InkWell(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Memulai pengajuan $judul...'),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+      onTap: () async {
+        final user = ref.read(authProvider);
+        if (user != null) {
+          try {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => const Center(child: CircularProgressIndicator()),
+            );
+            await ref.read(apiServiceProvider).addSurat(user['id'], judul);
+            if (context.mounted) {
+              Navigator.pop(context);
+              ref.invalidate(suratProvider);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Pengajuan $judul berhasil dikirim!'),
+                  backgroundColor: WarnaAplikasi.sukses,
+                ),
+              );
+            }
+          } catch (e) {
+            if (context.mounted) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Gagal mengajukan permohonan surat: $e')),
+              );
+            }
+          }
+        }
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(

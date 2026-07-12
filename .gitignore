@@ -36,3 +36,4 @@ api/.env
 api/php_errors.log
 api/tests/coverage*
 api/phpunit
+api/writable/database.db

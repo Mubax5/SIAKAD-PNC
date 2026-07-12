@@ -323,4 +323,45 @@ class ApiController extends Controller
             'deadline' => $deadline
         ]);
     }
+
+    public function submitKrs($userId)
+    {
+        $db = $this->getDb();
+        $raw = $this->request->getJSON();
+        $sks = $raw->sks ?? 20;
+
+        $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
+        if ($user) {
+            $db->table('users')
+               ->where('id', $userId)
+               ->update(['sks_krs' => $sks]);
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'KRS berhasil diajukan untuk disetujui.'
+            ]);
+        }
+        return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
+    }
+
+    public function addSurat($userId)
+    {
+        $db = $this->getDb();
+        $raw = $this->request->getJSON();
+        $jenis = $raw->jenis_surat ?? 'Surat Keterangan Aktif';
+
+        $user = $db->table('users')->where('id', $userId)->get()->getRowArray();
+        if ($user) {
+            $db->table('surat_permohonan')->insert([
+                'user_id'          => $userId,
+                'jenis_surat'      => $jenis,
+                'status'           => 'Diproses',
+                'tanggal_diajukan' => 'Diajukan pada ' . date('d M Y')
+            ]);
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Permohonan surat berhasil diajukan.'
+            ]);
+        }
+        return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
+    }
 }
