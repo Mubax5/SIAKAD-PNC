@@ -1,0 +1,38 @@
+# OS junk files
+.DS_Store
+Thumbs.db
+*.stackdump
+
+# IDE settings
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Flutter build / dependency files
+flutter/.dart_tool/
+flutter/build/
+flutter/.pub/
+flutter/.pub-cache/
+flutter/.flutter-plugins
+flutter/.flutter-plugins-dependencies
+flutter/doc/api/
+flutter/ios/Flutter/.last_build_id
+
+# PHP CodeIgniter files
+api/vendor/
+api/writable/cache/*
+!api/writable/cache/index.html
+api/writable/logs/*
+!api/writable/logs/index.html
+api/writable/session/*
+!api/writable/session/index.html
+api/writable/uploads/*
+!api/writable/uploads/index.html
+api/writable/debugbar/*
+!api/writable/debugbar/index.html
+api/.env
+api/php_errors.log
+api/tests/coverage*
+api/phpunit
