@@ -376,4 +376,9 @@ class ApiController extends Controller
         }
         return $this->response->setJSON(['status' => 'error', 'message' => 'User tidak ditemukan.'])->setStatusCode(404);
     }
+
+    public function options()
+    {
+        return $this->response->setStatusCode(200);
+    }
 }

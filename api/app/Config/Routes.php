@@ -19,3 +19,4 @@ $routes->post('api/user/keuangan/bayar/(:num)', 'ApiController::bayarKeuangan/$1
 $routes->get('api/user/mbkm/(:num)', 'ApiController::getMbkm/$1');
 $routes->post('api/user/krs/submit/(:num)', 'ApiController::submitKrs/$1');
 $routes->post('api/user/surat/add/(:num)', 'ApiController::addSurat/$1');
+$routes->options('api/(:any)', 'ApiController::options');
